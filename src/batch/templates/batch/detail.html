@@ -1,0 +1,35 @@
+{% extends 'farm/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% block body %}        
+        <h1>{{ batch.batch_name }} -- fazenda: {{ batch.farm.id }} -- Estação {{ batch.season.id }}</h1>
+        <p>Informações gerais</p>
+        <p>Identificador do lote: {{ batch.id }}</p>
+        {% if batch.prior_batch == None %}
+            <p>Lote cabeceira</p>
+        {% else %}
+            <p>Derivação do lote: <a href="{% url 'batch_detail' batch.prior_batch.id %}">{{ batch.prior_batch }}</a>  </p>
+        {% endif %}
+        <div class="button-container">
+            <button type="button" class="btn btn-info">
+                <a href="{% url 'add_workday' batch.id %}">Resultado DG</a>
+            </button>
+            <button type="button" class="btn btn-info">
+                <a href="{% url 'edit_batch' batch.id %}">Editar</a>
+            </button>
+            <button type="button" class="btn btn-info">
+                <a href="{% url 'batch_index' batch.farm.id batch.season.id  %}">Voltar para lista de lotes</a>
+            </button>
+            <button type="button" class="btn btn-danger">
+                <a href="{% url 'delete_batch' batch.id batch.season.id batch.farm.id %}">Apagar</a>
+            </button>
+        </div>
+    {% endblock %}
+</body>
+</html>

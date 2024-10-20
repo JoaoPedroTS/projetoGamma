@@ -1,0 +1,27 @@
+{% extends 'farm/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% block body %}
+        <h1>Lista de estações</h1>
+        {% if season_list %}
+            {% for season in season_list %}
+                <div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <a href="{% url 'season_detail' season.id %}">{{ season.season_name }}</a>
+                        </li>
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+                <h2>Nenhuma estação cadastrada</h2>
+        {% endif %}
+    {% endblock %}
+</body>
+</html>

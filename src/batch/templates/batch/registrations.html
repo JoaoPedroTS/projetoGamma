@@ -1,0 +1,16 @@
+{% extends 'farm/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% block body %}
+        <a href="{% url 'add_shaping' %}">Cadastros de categorias de Lote</a> <br>
+        <a href="{% url 'add_supplier' %}">Cadastros empresa</a> <br>
+        <a href="{% url 'add_protocol' %}">Cadastro de protocolo</a>
+    {% endblock %}
+</body>
+</html>

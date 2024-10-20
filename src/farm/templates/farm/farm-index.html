@@ -1,0 +1,47 @@
+{% extends 'farm/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% block body %}
+        {% if season %}
+            <h1>Lista de fazendas da {{ season.season_name }}</h1>
+
+            {% if farm_list %}
+                {% for farm in farm_list %}
+                    <div>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a href="{% url 'farm_detail' farm.id season.id %}">{{ farm.farm_name }} -- {{ farm.id }} </a>
+                            </li>
+                        </ul>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <h2>Nenhuma fazenda cadastrada</h2>
+            {% endif %}
+        {% else %}
+            <h1>Lista de fazendas geral</h1>
+
+            {% if farm_list %}
+                {% for farm in farm_list %}
+                    <div>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a href="{% url 'farm_detail' farm.id %}">{{ farm.farm_name }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                {% endfor %}
+            {% else %}
+            {% endif %}
+        {% endif %}
+    
+        
+    {% endblock %}
+</body>
+</html>

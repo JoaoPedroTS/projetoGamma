@@ -1,0 +1,19 @@
+
+img{
+    max-width: 50%;
+    height: auto;
+}
+p{
+    font-size: large;
+    color: #555;
+    font-weight: bold;
+}      
+a{
+    text-decoration: none; /* Remove o sublinhado */
+    color: inherit; /* Herda a cor do elemento pai */
+    font-weight: bold;
+}
+.home-container{
+    text-align: center;
+    margin-top: 50px;
+}

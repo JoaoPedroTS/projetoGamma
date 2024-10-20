@@ -1,0 +1,37 @@
+{% extends 'farm/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% block body %}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-1">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Adicionar lote</div>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST">
+                                {% csrf_token %}                               
+                                {% for field in form %}
+                                    <div class="form-group">
+                                        {{ field.label }}
+                                        {{ field }}
+                                    </div>
+                                {% endfor %}
+                                <br>
+                                <button class="btn btn-success" type="submit">Salvar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+</body>
+</html>

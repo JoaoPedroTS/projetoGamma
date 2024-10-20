@@ -1,0 +1,20 @@
+{% extends 'farm/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% block body %}
+        <h2>Tem certeza que deseja excluir o lote "{{ batch.batch_name }}"?</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Sim, excluir</button>
+            <a href="{% url 'batch_index' season_id=batch.season.id farm_id=batch.farm.id %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    {% endblock %}
+</body>
+</html>
