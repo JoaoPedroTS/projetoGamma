@@ -38,12 +38,13 @@ def season_detail(request, season_id):
     batches_maternity_count = Batch.objects.filter(season_id=season_id).values("batch_maternity").annotate(total=Count("id"))
 
     season_duration = season.get_duration()
+    elapsed_days = timezone.now().date() - season.begin_date
 
     if season.begin_date > timezone.now().date():
         percent_remaining_days = 0
         remaining_days = season.get_duration()
     else:
-        percent_remaining_days = round(((season.get_remaining_days()/season_duration)*100), 2)
+        percent_remaining_days = round(((elapsed_days.days/season_duration)*100), 2)
         remaining_days = season.get_remaining_days()
 
     context = {

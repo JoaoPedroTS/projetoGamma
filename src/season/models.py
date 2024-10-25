@@ -14,7 +14,7 @@ class Season(models.Model):
 
     def get_duration(self):
         delta = self.end_date - self.begin_date
-        return delta.days + 1
+        return delta.days
     
     def get_remaining_days(self):
         today = timezone.now().date()
