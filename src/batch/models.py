@@ -1,6 +1,8 @@
 from django.db import models
 from farm.models import Farm
 from season.models import Season
+from django.contrib.auth.models import User
+import datetime
 
 # Create your models here.
 class Supplier(models.Model):
@@ -73,9 +75,16 @@ class Batch(models.Model):
         max_length=1,
         choices=Choices.choices
     )
+    protocol =models.ForeignKey(Protocol, on_delete=models.CASCADE, related_name="batches", default=None)
+    vet_name = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     batch_size = models.IntegerField()
+    d0_date = models.DateField(blank=True, null=True, default=None)
+    dg_date = models.DateField(blank=True, null=True, default=None)
     negative_quant = models.IntegerField(default=0)
+    recurrence_negative_quant = models.IntegerField(default=0)
     positive_quant = models.IntegerField(default=0)
+    recurrence_positive_quant = models.IntegerField(default=0)
+    recurrence_quant = models.IntegerField(default=0)
     uncertainty_quant = models.IntegerField(default=0)
     batch_acronym = models.CharField(max_length=50, default="", blank=True)
 

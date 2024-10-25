@@ -14,15 +14,20 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Fazenda {{ batch.farm.farm_name }}</div>
-                            <div class="card-title">Lançamento de resultados do lote {{ batch.batch_name }}</div>
+                            <div class="card-title">Total de animais no {{ batch.batch_name }}: {{ batch.batch_size }}</div>
                         </div>
                         <div class="card-body">
                             <form method="POST">
                                 {% csrf_token %}
                                 {% for field in form %}
-                                    <div class="input-group mb-3">
-                                        {{ field.label }} 
+                                    <div class="form-group">
+                                        {{ field.label }}
                                         {{ field }}
+                                        {% if field.errors %}
+                                            <div class="text-danger">
+                                                {{ field.errors }}
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 {% endfor %}
                                 <button class="btn btn-success" type="submit" name="action" value="continue">Salvar e continuar</button>

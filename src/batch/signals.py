@@ -20,5 +20,7 @@ def create_negative_derived_batch(sender, instance, created, **kwargs):
             prior_batch = instance,
             batch_shaping = instance.batch_shaping,
             batch_maternity = instance.batch_maternity,
+            protocol = instance.protocol,
+            d0_date = instance.dg_date,
             batch_size = instance.negative_quant
         )

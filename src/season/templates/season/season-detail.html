@@ -9,19 +9,35 @@
 <body>
     {% block body %}
         <h1>Detalhe da {{ season.season_name }}</h1>
-        <a href="{% url 'farm_index' season.id %}">Fazendas nessa estação</a>
-
+        <br>
         <div class="row">
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div class="col-lg-3">
+                <button class="btn btn-success">
+                    <a href="{% url 'farm_index' season.id %}">Fazendas nessa estação</a>
+                </button>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
                 <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Total de animais na {{ season }}
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ total_batch_size }}
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-2">Andamento da estação</div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                            <p>Início da estação: {{ season.begin_date }}</p>
+                                            <p>Fim da estação: {{ season.end_date }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                            <p>Duração da estação: {{ season_duration }} Dias</p>
+                                            <p>Tempo restante na estação: {{ remaining_days }} Dias</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -31,45 +47,24 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Earnings (Annual)
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    $215,000
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 mb-4">
+        </div>        
+        <div class="row">
+            <div class="col-lg-12 ">
                 <div class="card border-left-info shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
-                                </div>
                                 <div class="row no-gutters align-items-center">
                                     <div class="col-auto">
-                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
-                                            50%
+                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800 mb-" id="percent_remaining_days">
+                                            {{ percent_remaining_days }} %
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="progress progress-sm mr-2">
-                                            <div class="progress-bar bg-info" role="progressbar"
-                                                style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                aria-valuemax="100"></div>
+                                            <div class="progress-bar bg-success" role="progressbar"
+                                                style="width: 0%;">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -81,76 +76,145 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Pending Requests
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Total de animais na estação
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    18
+                                    {{ total_batch_size }}
                                 </div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="fas fa-comments fa-2x text-gray-300"></i>
-                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>           
+            
+            <div class="col-lg-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Total de animais na estação (Retorno)
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{ total_batch_size }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>           
         </div>
 
         <div class="row">
-            <div class="col-lg-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        Chart
-                    </div>
-                    <div class="card-body">
-                        <canvas id="myChart" width="400" height="400"></canvas>
-                    </div>
+            <div class="col-lg-3">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    Formação de lotes
                 </div>
-
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Basic Card Example</h6>
-                    </div>
-                    <div class="card-body">
-                        The styling for this basic card example is created by using default Bootstrap
-                        utility classes. By using utility classes, the style of the card component can be
-                        easily modified with no need for any custom CSS!
-                    </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Formação do lote</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for batch in batches_types %}
+                        <tr>
+                            <td>{{ batch.batch_shaping__shaping_name }}</td>
+                            <td>{{ batch.total }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>            
+            <div class="col-lg-3">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    Responsável técnico
                 </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Formação do lote</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for vet in vets %}
+                        <tr>
+                            <td>{{ vet.vet_name__username }}</td>
+                            <td>{{ vet.total }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>            
+            <div class="col-lg-3">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    Sexo do lote
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Formação do lote</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for batch in batches_maternity_count %}
+                        <tr>
+                            <td>{{ batch.batch_maternity  }}</td>
+                            <td>{{ batch.total }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-        </div>           
-    
+            <div class="col-lg-3">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    Protocolo
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Formação do lote</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for batch in batches_types %}
+                        <tr>
+                            <td>{{ batch.batch_shaping__shaping_name }}</td>
+                            <td>{{ batch.total }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <script>
-            var ctx = document.getElementById('myChart').getContext('2d');
-            var myChart = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: '# of Votes',
-                            data: data,
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.7)',
-                                'rgba(54, 162, 235, 0.7)',
-                                'rgba(255, 206, 86, 0.7)',
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                });
+            var percent_remaining_days = document.getElementById("percent_remaining_days").innerHTML;
+            // Extrair apenas o número da string
+            percent_remaining_days = percent_remaining_days.replace('%', '').trim().replace(',', '.');
+            console.log(percent_remaining_days)
+            
+            // Acesso correto ao elemento pela ID e ajuste da largura
+            document.getElementsByClassName("progress-bar")[0].setAttribute("style", "width:"+percent_remaining_days+"%");
         </script>
 {% endblock %}
 </body>

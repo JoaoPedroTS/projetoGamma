@@ -8,18 +8,59 @@
 </head>
 <body>
     {% block body %}        
-        <h1>{{ batch.batch_name }} -- fazenda: {{ batch.farm.id }} -- Estação {{ batch.season.id }}</h1>
+        <h1>{{ batch.batch_name }} -- Fazenda {{ batch.farm.farm_name }} -- {{ batch.season.season_name }}</h1>
         <p>Informações gerais</p>
-        <p>Identificador do lote: {{ batch.id }}</p>
+        <p> Anamais no lote: {{ batch.batch_size }} </p>
+        <div class="row">
+            <div class="col-lg-6">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Positivas</th>
+                            <th scope="col">Negativas</th>
+                            <th scope="col">Duvidas</th>
+                            <th scope="col">Retorno</th>
+                            {% if batch.recurrence_positive_quant != 0 or batch.recurrence_positive_quant != 0 %}
+                                <th scope="col"> Positivas de retorno </th>
+                                <th scope="col"> Negativas de retorno </th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ batch.positive_quant }}</td>
+                            <td>{{ batch.negative_quant }}</td>
+                            <td>{{ batch.uncertainty_quant }}</td>
+                            <td>{{ batch.recurrence_quant }}</td>
+                            {% if batch.recurrence_positive_quant != 0 or batch.recurrence_positive_quant != 0 %}
+                                <td> {{ batch.recurrence_positive_quant }} </td>
+                                <td> {{ batch.recurrence_negative_quant }} </td>
+                            {% endif %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
         {% if batch.prior_batch == None %}
             <p>Lote cabeceira</p>
         {% else %}
             <p>Derivação do lote: <a href="{% url 'batch_detail' batch.prior_batch.id %}">{{ batch.prior_batch }}</a>  </p>
         {% endif %}
+        <p>Responsável técnico pelo lote: {{batch.vet_name}}</p>
         <div class="button-container">
             <button type="button" class="btn btn-info">
                 <a href="{% url 'add_workday' batch.id %}">Resultado DG</a>
             </button>
+            {% if batch.recurrence_quant != 0 %}
+                <button type="button" class="btn btn-warning">
+                    <a href="{% url 'dg_recurrence' batch.id %}">Resultado DG retornos</a>
+                </button>
+            {% elif batch.uncertainty_quant != 0 %}
+                <button type="button" class="btn btn-warning">
+                    <a href="{% url 'dg_uncertainty' batch.id %}">Resultado DG duvidas</a>
+                </button>
+            {% endif %}
             <button type="button" class="btn btn-info">
                 <a href="{% url 'edit_batch' batch.id %}">Editar</a>
             </button>

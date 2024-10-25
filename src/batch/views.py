@@ -2,10 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from .models import Batch
+from .models import Batch, Shaping, Supplier, Protocol
 from farm.models import Farm
 from season.models import Season
-from .forms import BatchForm, EditBatchForm, WorkDayForm, SupplierForm, ProtocolForm, ShapingForm
+from .forms import BatchForm, EditBatchForm, WorkDayForm, SupplierForm, ProtocolForm, ShapingForm, UncertaintyForm, RecurrenceForm
 from .tables import BatchTable
 
 # Create your views here.
@@ -112,7 +112,9 @@ def add_workday(request, batch_id):
     if form.is_valid():
         action = request.POST.get("action")
         work_day = True if action == "continue" else False
-        form.save(work_day=work_day)
+        instance = form.save(commit=False)  
+        instance.work_day = work_day
+        instance.save()
         return redirect("batch_index", farm_id=batch.farm.id, season_id=batch.season.id)
 
     context = {
@@ -136,14 +138,15 @@ def registrations(request):
 
 @login_required
 def add_supplier(request):
+    supplier_list = Supplier.objects.all()
     form = SupplierForm(request.POST or None)
-
+    
     if form.is_valid():
         supplier = form.save()
         supplier.save()
-        return redirect("registrations")
     
     context = {
+        "supplier_list": supplier_list,
         "form": form
     }
 
@@ -151,14 +154,15 @@ def add_supplier(request):
 
 @login_required
 def add_protocol(request):
+    protocol_list = Protocol.objects.all()
     form = ProtocolForm(request.POST or None)
 
     if form.is_valid():
         protocol = form.save()
-        protocol.save()
-        return redirect("registrations")
+        protocol.save()        
     
     context = {
+        "protocol_list":protocol_list,
         "form": form
     }
 
@@ -166,15 +170,70 @@ def add_protocol(request):
 
 @login_required
 def add_shaping(request):
+    shaping_list = Shaping.objects.all()
     form = ShapingForm(request.POST or None)
 
     if form.is_valid():
         shaping = form.save()
         shaping.save()
-        return redirect("registrations")
     
     context = {
+        "shaping_list": shaping_list,
         "form": form
     }
 
     return render(request, "batch/shaping-form.html", context)
+
+@login_required
+def dg_uncertainty(request, batch_id):
+    batch = Batch.objects.get(id=batch_id)
+    form = UncertaintyForm(request.POST or None)
+
+    if form.is_valid():
+        positive_add = form.cleaned_data["positive_quant"]
+        negative_add = form.cleaned_data["negative_quant"]
+
+        batch.positive_quant += positive_add
+        batch.negative_quant += negative_add
+        batch.uncertainty_quant -= (positive_add + negative_add)
+        batch.save()
+
+        return redirect("batch_detail", batch_id=batch_id)
+
+    context = {
+        "batch": batch,
+        "form": form
+    }
+    
+    return render(request, "batch/uncertainty-form.html", context)
+
+@login_required
+def dg_recurrence(request, batch_id):
+    batch = Batch.objects.get(id=batch_id)
+    #Como fazer a contabilidade 
+
+    #Falta tratar o caso onde existem um retorno mas n existe lote derivado
+    derived_batch = batch.derivative.first()
+
+    form = RecurrenceForm(request.POST or None)
+
+    if form.is_valid():
+        recurrence_positive = form.cleaned_data["recurrence_positive_quant"]
+        recurrence_negative = form.cleaned_data["recurrence_negative_quant"]
+
+        batch.recurrence_positive_quant += recurrence_positive
+        batch.recurrence_quant -= (recurrence_negative + recurrence_positive)
+        batch.save()
+
+        if derived_batch:
+            derived_batch.batch_size += recurrence_negative
+            derived_batch.save()
+        
+        return redirect("batch_detail", batch_id=batch_id)
+
+    context = {
+        "batch": batch,
+        "form": form
+    }
+
+    return render(request, "batch/recurrence-form.html", context)

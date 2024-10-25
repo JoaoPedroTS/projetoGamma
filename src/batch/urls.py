@@ -29,4 +29,7 @@ urlpatterns = [
     path("add_supplier/", views.add_supplier, name="add_supplier"),
     path("add_protocol/", views.add_protocol, name="add_protocol"),
     path("add_shaping/", views.add_shaping, name="add_shaping"),
+    path("dg_uncertainty/<int:batch_id>/", views.dg_uncertainty, name="dg_uncertainty"),
+    path("dg_recurrence/<int:batch_id>/", views.dg_recurrence, name="dg_recurrence"),
+
 ]

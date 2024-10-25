@@ -7,16 +7,19 @@ class BatchForm(forms.ModelForm):
         fields = [
             "batch_name",
             "batch_shaping",
-            "batch_shaping",
+            "protocol",
             "batch_maternity",
-            "batch_size"
+            "batch_size",
+            "d0_date",
         ]
         
         labels = {
             "batch_name": "Nome do lote",
             "batch_shaping": "Composição do lote",
+            "protocol": "Protocolo",
             "batch_maternity": "Sexo",
-            "batch_size": "Tamanho do lote"
+            "batch_size": "Tamanho do lote",
+            "d0_date": "Data D-0"
         }
 
         widgets = {
@@ -27,14 +30,20 @@ class BatchForm(forms.ModelForm):
             "batch_shaping": forms.Select(attrs={
                 'class': 'form-select'
             }),
-
+            "protocol": forms.Select(attrs={
+                'class': 'form-select'
+            }),
             "batch_maternity": forms.Select(attrs={
                 "class": "form-select"
             }),
             
             "batch_size": forms.NumberInput(attrs={
                 "class": "form-control"
-            })
+            }),
+            "d0_date": forms.DateInput(attrs={
+                "class": "form-control",
+                "placeholder": "dd-mm-yyyy"
+            }, format='%d-%m-%Y'),
         }
 
 class EditBatchForm(forms.ModelForm):
@@ -45,6 +54,7 @@ class EditBatchForm(forms.ModelForm):
             "batch_size",
             "positive_quant",
             "negative_quant",
+            "recurrence_quant",
             "uncertainty_quant"
         ]
 
@@ -53,26 +63,26 @@ class EditBatchForm(forms.ModelForm):
             "batch_size": "Tamanho do lote",
             "positive_quant": "Positivas",
             "negative_quant": "Negativas",
-            "uncertainty_quant": "Retorno"
+            "recurrence_quant": "Retorno",
+            "uncertainty_quant": "Dúvida"
         }
 
         widgets = {
             "batch_name": forms.TextInput(attrs={
                 "class": "form-control"
-            }),
-            
+            }),            
             "batch_size": forms.NumberInput(attrs={
                 "class": "form-control"
-            }),
-            
+            }),            
             "positive_quant": forms.NumberInput(attrs={
                 "class": "form-control"
-            }),
-            
+            }),            
             "negative_quant": forms.NumberInput(attrs={
                 "class": "form-control"
+            }),            
+            "recurrence_quant": forms.NumberInput(attrs={
+                "class": "form-control"
             }),
-            
             "uncertainty_quant": forms.NumberInput(attrs={
                 "class": "form-control"
             }),
@@ -84,13 +94,17 @@ class WorkDayForm(forms.ModelForm):
         fields = [
             "positive_quant",
             "negative_quant",
-            "uncertainty_quant"
+            "recurrence_quant",
+            "uncertainty_quant",
+            "dg_date"
         ]
 
         labels = {
             "positive_quant": "Positivas",
             "negative_quant": "Negatvas",
-            "uncertainty_quant": "Retorno"
+            "recurrence_quant": "Retorno",
+            "uncertainty_quant": "Duvida",
+            "dg_date": "Data do serviço"
         }
 
         widgets = {
@@ -101,11 +115,21 @@ class WorkDayForm(forms.ModelForm):
             "negative_quant": forms.NumberInput(attrs={
                 "class": "form-control"
             }),
-
+            "recurrence_quant": forms.NumberInput(attrs={
+                "class": "form-control"
+            }),
             "uncertainty_quant": forms.NumberInput(attrs={
                 "class": "form-control"
             }),
+            "dg_date": forms.DateInput(attrs={
+                "class": "form-control datepicker",
+                "placeholder": "dd-mm-yyyy"
+            }, format=['%d-%m-%Y', "%d/%m/%Y"]),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['dg_date'].input_formats = ['%d-%m-%Y']
 
     def save(self, commit=True, work_day=False):
         instance = super().save(commit=False)
@@ -126,6 +150,16 @@ class SupplierForm(forms.ModelForm):
         labels = {
             "supplier_name": "Nome",
             "supplier_acronym": "Sigla"
+        }
+
+        widgets = {
+            "supplier_name": forms.TextInput(attrs={
+                'class': 'form-control'
+            }),
+            
+            "supplier_acronym": forms.TextInput(attrs={
+                "class": "form-control"
+            }),
         }
 
 class ProtocolForm(forms.ModelForm):
@@ -187,3 +221,69 @@ class ShapingForm(forms.ModelForm):
                 "class": "form-control"
             }),
         }
+
+class UncertaintyForm(forms.ModelForm):
+    class Meta:
+        model = Batch
+
+        fields = [
+            "positive_quant",
+            "negative_quant"
+        ]
+
+        labels = {
+            "positive_quant": "Positivas",
+            "negative_quant": "Negativas"
+        }
+
+        widgets = {
+            "positive_quant": forms.NumberInput(attrs={
+                "class": "form-control"
+            }),
+            "negative_quant": forms.NumberInput(attrs={
+                "class": "form-control"
+            }),
+        }
+
+        def clean(self):
+            cleaned_data = super().clean()
+            positive = cleaned_data.get("positive_quant", 0)
+            negative = cleaned_data.get("negative_quant", 0)
+
+            if (positive + negative) > self.instance.uncertainty_quant:
+                raise forms.ValidationError("A soma dos valores não pode exceder o total de animais em dúvida.")
+
+            return cleaned_data
+        
+class RecurrenceForm(forms.ModelForm):
+    class Meta:
+        model = Batch
+
+        fields = [
+            "recurrence_positive_quant",
+            "recurrence_negative_quant"
+        ]
+
+        labels = {
+            "recurrence_positive_quant": "Positivas",
+            "recurrence_negative_quant": "Negativas"
+        }
+
+        widgets = {
+            "recurrence_positive_quant": forms.NumberInput(attrs={
+                "class": "form-control"
+            }),
+            "recurrence_negative_quant": forms.NumberInput(attrs={
+                "class": "form-control"
+            }),
+        }
+
+        def clean(self):
+            cleaned_data = super().clean()
+            positive = cleaned_data.get("recurrence_positive_quant", 0)
+            negative = cleaned_data.get("recurrence_negative_quant", 0)
+
+            if positive + negative > self.instance.recurrence_quant:
+                raise forms.ValidationError("A soma dos valores não pode exceder o total dos animais em retorno")
+            
+            return cleaned_data
