@@ -50,18 +50,21 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-              <a class="nav-link active" aria-current="page" href="/">Página inicial</a>              
+              <a class="nav-link active text-white" aria-current="page" href="/">Página inicial</a>              
               {% if user.is_authenticated %}
-                <a class="nav-link" href="{% url 'season_index' %}">Estação</a>
-                <a class="nav-link" href="{% url 'farm_index' %}">Fazendas</a>
-                <a class="nav-link" href="{% url 'password_change' %}">Alterar senha</a>
-                <a class="nav-link" href="{% url 'registrations' %}">Cadastros</a>
+                <a class="nav-link text-white" href="{% url 'season_index' %}">Estação</a>
+                <a class="nav-link text-white" href="{% url 'farm_index' %}">Fazendas</a>
+                <a class="nav-link text-white" href="{% url 'password_change' %}">Alterar senha</a>
+                <a class="nav-link text-white" href="{% url 'registrations' %}">Cadastros</a>
+                {% if user.is_superuser %}
+                  <a class="nav-link text-white" href="{% url 'add_season' %}">Adicionar Estação</a>
+                {% endif %}
                 <form method="POST" action="{% url 'logout' %}">
                   {% csrf_token %}
-                  <button class="nav-link" type="submit">Logout</button>
+                  <button class="nav-link text-white" type="submit">Logout</button>
                 </form>
               {% else %}
-                <a class="nav-link" href="{% url 'login' %}">Login</a>
+                <a class="nav-link text-white" href="{% url 'login' %}">Login</a>
               {% endif %}
             </div>
           </div>
@@ -75,9 +78,9 @@
 
     <footer class="sticky-footer bg-white">
       <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <i class="fa-brands fa-instagram"></i>JAReprogem<br>
-            <span>Copyright &copy; 2024 Direitos reservados a JAReprogem</span>
+          <div class="copyright text-center my-auto">            
+            <i class="fa-brands fa-instagram"><a href="https://www.instagram.com/jareprogen/">JAReprogen</a></i><br>
+            <span>Copyright &copy; 2024 Direitos reservados a JAReprogen</span>
           </div>
       </div>
   </footer>    

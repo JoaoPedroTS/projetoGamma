@@ -1,9 +1,11 @@
 from django.utils import timezone
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Sum, Count
 from.models import Season
+from .forms import SeasonForm
 from batch.models import Batch
+from farm.models import Farm
 
 # Create your views here.
 
@@ -59,3 +61,29 @@ def season_detail(request, season_id):
     }
     
     return render(request, "season/season-detail.html", context)
+
+@user_passes_test(lambda u: u.is_superuser)
+def add_season(request):
+    # season = Season.objects.get(id=season_id)
+    farms = Farm.objects.all()
+
+    form = SeasonForm(request.POST or None)
+
+    if request.method == "POST":
+        print(request.POST)  # Para depuração
+        if form.is_valid():
+            print("Dados limpos para farms:", form.cleaned_data.get("farms"))
+            season = form.save(commit=False)
+            season.save()
+            form.save_m2m()  # Salva a relação ManyToManyField
+            return redirect("season_index")
+        else:
+            print(form.errors)
+    
+    
+    context = {
+        "form": form,
+        "farm": farms,
+    }
+
+    return render(request, "season/add-season.html", context)

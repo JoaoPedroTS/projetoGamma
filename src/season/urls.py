@@ -20,4 +20,5 @@ from django.urls import path
 urlpatterns = [
     path("", views.season_index, name="season_index"),
     path("<int:season_id>", views.season_detail, name="season_detail"),
+    path("add_season/", views.add_season, name="add_season"),
 ]

@@ -13,8 +13,17 @@
                 <h1>{{ season.season_name }}</h1>
                 
                 <h2>{{ farm.farm_name }}</h2>
-                <h3> Identificador da fazenda: {{ farm.id }}</h3>
-                <a href="{% url 'batch_index' farm.id season.id %}">Lotes desta fazenda</a>
+                <h3>{{ farm.farm_acronym }}</h3>
+                <h4> Proprietário: {{ farm.farm_owner }} </h4>
+                <h4> Município: {{ farm.farm_location }} </h4>
+                <button class="btn btn-success">
+                    <a href="{% url 'batch_index' farm.id season.id %}">Lotes desta fazenda</a>
+                </button>
+                
+                <p>Total de lotes</p>
+                <p>Total de animais</p>
+                <p>Total de prenhas</p>
+                <p>Total de vazias</p>
             </div>
         {% else %}
             <h1>detalhes da fazenda</h1>
