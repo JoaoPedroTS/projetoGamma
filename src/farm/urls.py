@@ -20,6 +20,7 @@ from django.urls import path
 urlpatterns = [
     path("", views.farm_index, name="farm_index"),
     path("<int:season_id>/", views.farm_index, name="farm_index"),
-    path("<int:farm_id>", views.farm_detail, name="farm_detail"),
+    path("<int:farm_id>", views.farm_detail, name="farm_profile"),
     path("<int:farm_id>/season/<int:season_id>", views.farm_detail, name="farm_detail"),
+    path("add_farm/", views.add_farm, name="add_farm"),
 ]

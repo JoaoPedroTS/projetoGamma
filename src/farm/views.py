@@ -1,8 +1,8 @@
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Farm
+from .forms import FarmForm
 from season.models import Season
-import json
 
 # Create your views here.
 
@@ -48,3 +48,18 @@ def farm_detail(request, farm_id, season_id=None):
     }
 
     return render(request, "farm/detail.html", context)
+
+@user_passes_test(lambda u: u.is_superuser)
+def add_farm(request):
+    form = FarmForm(request.POST or None)
+
+    if form.is_valid():
+        farm = form.save()
+        farm.save()
+        return redirect("farm_index")
+
+    context = {
+        "form": form
+    }
+    
+    return render(request, "farm/add-farm.html", context)

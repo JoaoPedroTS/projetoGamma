@@ -58,6 +58,7 @@
                 <a class="nav-link text-white" href="{% url 'registrations' %}">Cadastros</a>
                 {% if user.is_superuser %}
                   <a class="nav-link text-white" href="{% url 'add_season' %}">Adicionar Estação</a>
+                  <a class="nav-link text-white" href="{% url 'add_farm' %}">Adicionar Fazenda</a>
                 {% endif %}
                 <form method="POST" action="{% url 'logout' %}">
                   {% csrf_token %}
