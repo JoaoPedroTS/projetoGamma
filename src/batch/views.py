@@ -46,6 +46,7 @@ def add_batch(request, season_id, farm_id):
         batch = form.save(commit=False)
         batch.farm = farm
         batch.season = season
+        batch.vet_name = request.user
         batch.save()
         return redirect("batch_index", farm_id=farm_id , season_id=season_id)
     
