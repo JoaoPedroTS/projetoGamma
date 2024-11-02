@@ -43,6 +43,28 @@
                                                     </div>
                                                 {% endfor %}
                                             </div>
+                                        {% elif field.name == 'batch_shapping' %}
+                                            <div class="d-flex flex-wrap">
+                                                {% for choice in field %}
+                                                    <div class="form-check me-3 mb-3">
+                                                        {{ choice.tag }}  <!-- Aqui renderiza o input do Radio -->
+                                                        <label class="form-check-label">
+                                                            {{ choice.choice_label }}  <!-- Aqui renderiza o rótulo do Radio -->
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% elif field.name == 'birth_month' %}
+                                            <div class="d-flex flex-wrap">
+                                                {% for choice in field %}
+                                                    <div class="form-check me-3 mb-3">
+                                                        {{ choice.tag }}  <!-- Aqui renderiza o input do Radio -->
+                                                        <label class="form-check-label">
+                                                            {{ choice.choice_label }}  <!-- Aqui renderiza o rótulo do Radio -->
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
                                         {% else %}
                                             {{ field }}
                                         {% endif %}

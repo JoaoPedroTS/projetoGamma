@@ -1,44 +1,42 @@
 from django import forms
-from .models import Batch, Supplier, Protocol, Shaping
+from .models import Batch, Supplier, Protocol
 
 class BatchForm(forms.ModelForm):
     class Meta:
         model = Batch
         fields = [
-            "batch_name",
-            "batch_shaping",
             "protocol",
+            "batch_shapping",
             "batch_maternity",
+            "birth_month",
             "batch_size",
             "d0_date",
             "rating"
         ]
         
         labels = {
-            "batch_name": "Nome do lote",
-            "batch_shaping": "Composição do lote",
             "protocol": "Protocolo",
             "batch_maternity": "Sexo",
+            "batch_shapping": "Formação do lote",
+            "birth_month": "Mês de parição",
             "batch_size": "Tamanho do lote",
             "d0_date": "Data D-0",
             "rating": "Escore"
         }
 
         widgets = {
-            "batch_name": forms.TextInput(attrs={
-                "class": "form-control"
-            }),
-
-            "batch_shaping": forms.Select(attrs={
-                'class': 'form-select'
-            }),
             "protocol": forms.Select(attrs={
                 'class': 'form-select'
             }),
             "batch_maternity": forms.RadioSelect(attrs={
                 "class": "form-check-input form-check-inline"
             }),
-            
+            "batch_shapping": forms.RadioSelect(attrs={
+                "class": "form-check-input form-check-inline"
+            }),            
+            "birth_month": forms.RadioSelect(attrs={
+                "class": "form-check-input form-check-inline"
+            }),            
             "batch_size": forms.NumberInput(attrs={
                 "class": "form-control"
             }),
@@ -56,9 +54,13 @@ class BatchForm(forms.ModelForm):
         super(BatchForm, self).__init__(*args, **kwargs)
         self.fields['rating'].choices = Batch.RATING_CHOICES
         self.fields['batch_maternity'].choices = Batch.Choices.choices
+        self.fields['batch_shapping'].choices = Batch.ShappingChoices.choices
+        self.fields['birth_month'].choices = Batch.BIRTH_MONTH_CHOICES
         # Remover o espaço reservado
         self.fields['rating'].empty_label = None
         self.fields['batch_maternity'].empty_label = None
+        self.fields['batch_shapping'].empty_label = None
+        self.fields['birth_month'].empty_label = None
 
 class EditBatchForm(forms.ModelForm):
     class Meta:
@@ -137,13 +139,9 @@ class WorkDayForm(forms.ModelForm):
             }),
             "dg_date": forms.DateInput(attrs={
                 "class": "form-control datepicker",
-                "placeholder": "dd-mm-yyyy"
-            }, format=['%d-%m-%Y', "%d/%m/%Y"]),
+                "placeholder": "dd/mm/yyyy"
+            }, format='%d-%m-%Y'),
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['dg_date'].input_formats = ['%d-%m-%Y']
 
     def save(self, commit=True, work_day=False):
         instance = super().save(commit=False)
@@ -209,30 +207,6 @@ class ProtocolForm(forms.ModelForm):
             
             "presync": forms.Select(attrs={
                 "class": "form-select"
-            }),
-        }
-
-class ShapingForm(forms.ModelForm):
-    class Meta:
-        model = Shaping
-
-        fields = [
-            "shaping_name",
-            "shaping_acronym"
-        ]
-
-        labels = {
-            "shaping_name": "Nome",
-            "shaping_acronym": "Sigla"
-        }
-
-        widgets = {
-            "shaping_name": forms.TextInput(attrs={
-                "class": "form-control"
-            }),
-            
-            "shaping_acronym": forms.TextInput(attrs={
-                "class": "form-control"
             }),
         }
 

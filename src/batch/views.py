@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from .models import Batch, Shaping, Supplier, Protocol
+from .models import Batch, Supplier, Protocol
 from farm.models import Farm
 from season.models import Season
-from .forms import BatchForm, EditBatchForm, WorkDayForm, SupplierForm, ProtocolForm, ShapingForm, UncertaintyForm, RecurrenceForm
+from .forms import BatchForm, EditBatchForm, WorkDayForm, SupplierForm, ProtocolForm, UncertaintyForm, RecurrenceForm
 from .tables import BatchTable
 
 # Create your views here.
@@ -48,8 +47,11 @@ def add_batch(request, season_id, farm_id):
         batch.farm = farm
         batch.season = season
         batch.save()
-
         return redirect("batch_index", farm_id=farm_id , season_id=season_id)
+    
+    else: 
+        print(form.errors)
+
     
     context = {
         "form": form
@@ -167,22 +169,6 @@ def add_protocol(request):
     }
 
     return render(request, "batch/protocol-form.html", context)
-
-@login_required
-def add_shaping(request):
-    shaping_list = Shaping.objects.all()
-    form = ShapingForm(request.POST or None)
-
-    if form.is_valid():
-        shaping = form.save()
-        shaping.save()
-    
-    context = {
-        "shaping_list": shaping_list,
-        "form": form
-    }
-
-    return render(request, "batch/shaping-form.html", context)
 
 @login_required
 def dg_uncertainty(request, batch_id):

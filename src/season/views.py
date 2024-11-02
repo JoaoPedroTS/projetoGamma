@@ -31,7 +31,7 @@ def season_detail(request, season_id):
     ).aggregate(total=Sum("batch_size"))["total"]
 
     #Contagem de Lotes por tipo na estação
-    batches_types = Batch.objects.filter(season_id=season_id).values('batch_shaping__shaping_name').annotate(total=Count('id'))
+    batches_types = Batch.objects.filter(season_id=season_id).values('batch_shapping').annotate(total=Count('id'))
 
     #Contagem de lotes por Responsável técnico
     vets = Batch.objects.filter(season_id=season_id).values('vet_name__username').annotate(total=Count('id'))
