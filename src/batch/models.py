@@ -65,6 +65,11 @@ class Batch(models.Model):
         SIM = "M", "Macho"
         NAO = "F", "Fêmea"
         MIX = "H", "Heterogêneo"
+
+    RATING_CHOICES = [
+        (round(i * 0.25, 2), str(round(i * 0.25, 2)))
+        for i in range(8, 21)  # gera valores de 1.0 até 5.0 com passo 0.25
+    ]
     
     farm = models.ForeignKey(Farm, on_delete=models.CASCADE, related_name="batches")
     season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name="batches")
@@ -80,6 +85,14 @@ class Batch(models.Model):
     batch_size = models.IntegerField()
     d0_date = models.DateField(blank=True, null=True, default=None)
     dg_date = models.DateField(blank=True, null=True, default=None)
+    rating = models.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        choices=RATING_CHOICES,
+        null=True,
+        blank=True,
+        verbose_name="Rating"
+    )
     negative_quant = models.IntegerField(default=0)
     recurrence_negative_quant = models.IntegerField(default=0)
     positive_quant = models.IntegerField(default=0)

@@ -10,7 +10,7 @@
     {% block body %}
         <div class="container">
             <div class="row">
-                <div class="col-lg-10 offset-1">
+                <div class="col-lg-11 offset-1">
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Adicionar lote</div>
@@ -20,8 +20,37 @@
                                 {% csrf_token %}                               
                                 {% for field in form %}
                                     <div class="form-group">
-                                        {{ field.label }}
-                                        {{ field }}
+                                        <label>{{ field.label_tag }}</label>
+                                        {% if field.name == 'rating' %}
+                                            <div class="d-flex flex-wrap">
+                                                {% for choice in field %}
+                                                    <div class="form-check me-3 mb-3">
+                                                        {{ choice.tag }}
+                                                        <label class="form-check-label">
+                                                            {{ choice.choice_label }}
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% elif field.name == 'batch_maternity' %}
+                                            <div class="d-flex flex-wrap">
+                                                {% for choice in field %}
+                                                    <div class="form-check me-3 mb-3">
+                                                        {{ choice.tag }}  <!-- Aqui renderiza o input do Radio -->
+                                                        <label class="form-check-label">
+                                                            {{ choice.choice_label }}  <!-- Aqui renderiza o rótulo do Radio -->
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ field }}
+                                        {% endif %}
+                                        {% if field.errors %}
+                                            <div class="text-danger">
+                                                {{ field.errors }}
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 {% endfor %}
                                 <br>

@@ -11,6 +11,7 @@ class BatchForm(forms.ModelForm):
             "batch_maternity",
             "batch_size",
             "d0_date",
+            "rating"
         ]
         
         labels = {
@@ -19,7 +20,8 @@ class BatchForm(forms.ModelForm):
             "protocol": "Protocolo",
             "batch_maternity": "Sexo",
             "batch_size": "Tamanho do lote",
-            "d0_date": "Data D-0"
+            "d0_date": "Data D-0",
+            "rating": "Escore"
         }
 
         widgets = {
@@ -33,8 +35,8 @@ class BatchForm(forms.ModelForm):
             "protocol": forms.Select(attrs={
                 'class': 'form-select'
             }),
-            "batch_maternity": forms.Select(attrs={
-                "class": "form-select"
+            "batch_maternity": forms.RadioSelect(attrs={
+                "class": "form-check-input form-check-inline"
             }),
             
             "batch_size": forms.NumberInput(attrs={
@@ -44,7 +46,19 @@ class BatchForm(forms.ModelForm):
                 "class": "form-control",
                 "placeholder": "dd-mm-yyyy"
             }, format='%d-%m-%Y'),
+
+            "rating": forms.RadioSelect(attrs={
+                "class": "form-check-input form-check-inline"
+            })
         }
+    
+    def __init__(self, *args, **kwargs):
+        super(BatchForm, self).__init__(*args, **kwargs)
+        self.fields['rating'].choices = Batch.RATING_CHOICES
+        self.fields['batch_maternity'].choices = Batch.Choices.choices
+        # Remover o espaço reservado
+        self.fields['rating'].empty_label = None
+        self.fields['batch_maternity'].empty_label = None
 
 class EditBatchForm(forms.ModelForm):
     class Meta:
