@@ -45,3 +45,20 @@ class SeasonForm(forms.ModelForm):
 
             for checkbox in self.fields["farms"].widget.choices:
                 checkbox[1].widget.attrs.update({"class": "form-check-input"})
+
+class AppendFarmForm(forms.ModelForm):
+    class Meta:
+        model = Season
+        fields = [
+            "farms"
+        ]
+
+        labels = {
+            "farms": "Fazendas nessa estação"
+        }
+
+        widgets = {
+            "farms": forms.CheckboxSelectMultiple(attrs={
+                "class": "checkbox-select-multiple"
+            })
+        }

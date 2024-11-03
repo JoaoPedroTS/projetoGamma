@@ -6,6 +6,7 @@ class FarmForm(forms.ModelForm):
         model = Farm
         fields = [
             "farm_name",
+            "farm_acronym",
             # "farm_brand",
             "farm_owner",
             "farm_location",
@@ -13,6 +14,7 @@ class FarmForm(forms.ModelForm):
 
         labels = {
             "farm_name": "Nome",
+            "farm_acronym": "Sigla",
             # "farm_brand": "Logomarca",
             "farm_owner": "Proprietário",
             "farm_location": "Localidade",
@@ -20,6 +22,9 @@ class FarmForm(forms.ModelForm):
 
         widgets = {
             "farm_name": forms.TextInput(attrs={
+                "class": "form-control"
+            }),
+            "farm_acronym": forms.TextInput(attrs={
                 "class": "form-control"
             }),
             # "farm_brand",

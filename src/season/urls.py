@@ -21,4 +21,5 @@ urlpatterns = [
     path("", views.season_index, name="season_index"),
     path("<int:season_id>", views.season_detail, name="season_detail"),
     path("add_season/", views.add_season, name="add_season"),
+    path("append_farm/<int:season_id>", views.append_farm, name="append_farm")
 ]

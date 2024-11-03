@@ -135,7 +135,7 @@
                     <tbody>
                         {% for batch in batches_types %}
                         <tr>
-                            <td>{{ batch.batch_shaping__shaping_name }}</td>
+                            <td>{{ batch.batch_shapping }}</td>
                             <td>{{ batch.total }}</td>
                         </tr>
                         {% endfor %}
@@ -149,7 +149,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">Formação do lote</th>
+                            <th scope="col">Técnico</th>
                             <th scope="col">Total</th>
                         </tr>
                     </thead>
@@ -170,7 +170,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">Formação do lote</th>
+                            <th scope="col">Sexo da cria</th>
                             <th scope="col">Total</th>
                         </tr>
                     </thead>
@@ -191,15 +191,15 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">Formação do lote</th>
+                            <th scope="col">Protocolo utilizado</th>
                             <th scope="col">Total</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for batch in batches_types %}
+                        {% for protocol in protocols %}
                         <tr>
-                            <td>{{ batch.batch_shaping__shaping_name }}</td>
-                            <td>{{ batch.total }}</td>
+                            <td>{{ protocol.protocol__protocol_acronym }}</td>
+                            <td>{{ protocol.total }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

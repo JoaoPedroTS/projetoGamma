@@ -16,13 +16,16 @@
                     <div>
                         <ul class="list-group">
                             <li class="list-group-item">
-                                <a href="{% url 'farm_detail' farm.id season.id %}">{{ farm.farm_name }} -- {{ farm.id }} </a>
+                                <a href="{% url 'farm_detail' farm.id season.id %}">{{ farm.farm_acronym }}</a>
                             </li>
                         </ul>
                     </div>
                 {% endfor %}
+                
+                <button class="btn btn-info"><a href="{% url 'append_farm' season.id %}">Adicionar fazendas na estação</a></button>
             {% else %}
                 <h2>Nenhuma fazenda cadastrada</h2>
+                <button class="btn btn-info"><a href="{% url 'append_farm' season.id %}">Adicionar fazendas na estação</a></button>
             {% endif %}
         {% else %}
             <h1>Lista de fazendas geral</h1>

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Sum, Count
 from.models import Season
-from .forms import SeasonForm
+from .forms import SeasonForm, AppendFarmForm
 from batch.models import Batch
 from farm.models import Farm
 
@@ -33,6 +33,9 @@ def season_detail(request, season_id):
     #Contagem de Lotes por tipo na estação
     batches_types = Batch.objects.filter(season_id=season_id).values('batch_shapping').annotate(total=Count('id'))
 
+    #contagem de lotes por protocolo na estação
+    protocols = Batch.objects.filter(season_id=season_id).values("protocol__protocol_acronym").annotate(total=Count("id"))
+
     #Contagem de lotes por Responsável técnico
     vets = Batch.objects.filter(season_id=season_id).values('vet_name__username').annotate(total=Count('id'))
 
@@ -53,6 +56,7 @@ def season_detail(request, season_id):
         "season": season,
         "total_batch_size": total_batch_size,
         "batches_types": batches_types,
+        "protocols": protocols,
         "batches_maternity_count": batches_maternity_count,
         "vets":vets,
         "season_duration": season_duration,
@@ -87,3 +91,20 @@ def add_season(request):
     }
 
     return render(request, "season/add-season.html", context)
+
+@user_passes_test(lambda u: u.is_superuser)
+def append_farm(request, season_id):
+    season = Season.objects.get(id=season_id)
+    
+    form = AppendFarmForm(request.POST or None, instance=season)
+
+    if form.is_valid():
+        form.save()
+        return redirect("season_detail", season_id = season_id)
+    
+    context = {
+        "form": form,
+        "season": season,
+    }
+
+    return render(request, "season/append_farm.html", context)

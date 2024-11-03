@@ -31,6 +31,10 @@ def farm_index(request, season_id=None):
 def farm_detail(request, farm_id, season_id=None):
     season = None
     farm = None
+    batches_count = 0
+    animals_count = 0
+    positive_count = 0
+    negative_count = 0
 
     if season_id is None:
         farm = Farm.objects.get(id=farm_id)
