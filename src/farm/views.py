@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db.models import Sum
 from .models import Farm
+from batch.models import Batch
 from .forms import FarmForm
 from season.models import Season
 
@@ -35,16 +37,18 @@ def farm_detail(request, farm_id, season_id=None):
     else:
         season = Season.objects.get(id=season_id)
         farm = Farm.objects.get(id=farm_id)
-
-    
-    labels = ["Label 1", "Label 2", "Label 3"]
-    data = [30, 20, 10]
+        batches_count = Batch.objects.filter(farm=farm, season=season).count()
+        animals_count = Batch.objects.filter(farm=farm, season=season, prior_batch__isnull=True).aggregate(total=Sum("batch_size"))["total"]
+        positive_count = Batch.objects.filter(farm=farm, season=season).aggregate(total=Sum("positive_quant"))["total"]
+        negative_count = Batch.objects.filter(farm=farm, season=season).aggregate(total=Sum("negative_quant"))["total"]
     
     context = {
         "season": season,
         "farm": farm,
-        "labels": labels,
-        'data': data
+        "batches_count": batches_count,
+        "animals_count": animals_count,
+        "positive_count": positive_count,
+        "negative_count": negative_count
     }
 
     return render(request, "farm/detail.html", context)

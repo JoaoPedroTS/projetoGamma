@@ -20,10 +20,10 @@
                     <a href="{% url 'batch_index' farm.id season.id %}">Lotes desta fazenda</a>
                 </button>
                 
-                <p>Total de lotes</p>
-                <p>Total de animais</p>
-                <p>Total de prenhas</p>
-                <p>Total de vazias</p>
+                <p>Total de lotes: {{ batches_count }}</p>
+                <p>Total de animais: {{ animals_count }}</p>
+                <p>Total de prenhas: {{ positive_count }}</p>
+                <p>Total de vazias: {{ negative_count }}</p>
             </div>
         {% else %}
             <h1>detalhes da fazenda</h1>
