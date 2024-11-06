@@ -42,18 +42,24 @@ def add_batch(request, season_id, farm_id):
     
     form = BatchForm(request.POST or None)
 
-    if form.is_valid():
-        batch = form.save(commit=False)
-        batch.farm = farm
-        batch.season = season
-        batch.vet_name = request.user
-        batch.save()
-        return redirect("batch_index", farm_id=farm_id , season_id=season_id)
-    
-    else: 
-        print(form.errors)
+    print("Dados do POST:", request.POST)
 
-    
+    if request.method == "POST":
+        print(request.POST)
+        if form.is_valid():
+            print("Dados limpos para farms:", form.cleaned_data.get("birth_month"))
+            batch = form.save(commit=False)
+            batch.farm = farm
+            batch.season = season
+            batch.vet_name = request.user
+            batch.save()
+
+            form.save_m2m()
+            return redirect("batch_index", farm_id=farm_id , season_id=season_id)
+        
+        else: 
+            print(form.errors)
+        
     context = {
         "form": form
     }
@@ -115,9 +121,11 @@ def add_workday(request, batch_id):
     if form.is_valid():
         action = request.POST.get("action")
         work_day = True if action == "continue" else False
-        instance = form.save(commit=False)  
+        
+        instance = form.save(commit=False)
         instance.work_day = work_day
         instance.save()
+
         return redirect("batch_index", farm_id=batch.farm.id, season_id=batch.season.id)
 
     context = {

@@ -84,7 +84,6 @@ def add_season(request):
         else:
             print(form.errors)
     
-    
     context = {
         "form": form,
         "farm": farms,

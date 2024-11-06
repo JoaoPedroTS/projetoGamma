@@ -43,6 +43,12 @@ class Protocol(models.Model):
         self.protocol_acronym = f"{self.protocol_supplier} - {self.protocol_duration} - G{self.gnrh} - PS{self.presync}"
         super().save(*args, **kwargs)
 
+class BirthMonth(models.Model):
+    def __str__(self):
+        return self.month
+    
+    month = models.CharField(max_length=3, choices=[(str(i), str(i)) for i in range(1, 13)] + [("N/A", "N/A")], unique=True)
+
 class Batch(models.Model):
     def __str__(self):
         return self.batch_name
@@ -83,10 +89,8 @@ class Batch(models.Model):
         null=True,
         blank=True
     )
-    birth_month = models.CharField(
-        max_length = 3,
-        choices = BIRTH_MONTH_CHOICES,
-        null=True,
+    birth_month = models.ManyToManyField(
+        "BirthMonth",
         blank=True
     )
     protocol = models.ForeignKey(Protocol, on_delete=models.CASCADE, related_name="batches", default=None)
@@ -125,10 +129,9 @@ class Batch(models.Model):
             next_number = self.next_batch_number()
             self.batch_name = f"Lote {next_number}"
 
-        if self.batch_shapping == "VS" or  self.batch_shapping == "NN" or self.batch_shapping == "NP":
+        if self.batch_shapping in ["VS", "NN", "NP"]:
             self.batch_maternity = "N/A"
-            self.birth_month = "N/A"
             self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating}"
         else:
-            self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating} - {self.batch_maternity} - {self.birth_month}"
+            self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating} - {self.batch_maternity}"
         super().save(*args, **kwargs)

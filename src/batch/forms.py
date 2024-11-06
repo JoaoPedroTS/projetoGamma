@@ -1,7 +1,16 @@
 from django import forms
-from .models import Batch, Supplier, Protocol
+from .models import Batch, Supplier, Protocol, BirthMonth
 
 class BatchForm(forms.ModelForm):
+    birth_month = forms.ModelMultipleChoiceField(
+        queryset=BirthMonth.objects.all(),
+        widget = forms.CheckboxSelectMultiple(attrs={
+            "class": "form-check-input form-check-inline"
+        }),
+        required = False,
+        label = "Mês de parição"
+    )
+    
     class Meta:
         model = Batch
         fields = [
@@ -16,8 +25,8 @@ class BatchForm(forms.ModelForm):
         
         labels = {
             "protocol": "Protocolo",
-            "batch_maternity": "Sexo",
             "batch_shapping": "Formação do lote",
+            "batch_maternity": "Sexo",
             "birth_month": "Mês de parição",
             "batch_size": "Tamanho do lote",
             "d0_date": "Data D-0",
@@ -28,15 +37,15 @@ class BatchForm(forms.ModelForm):
             "protocol": forms.Select(attrs={
                 'class': 'form-select'
             }),
+            "batch_shapping": forms.RadioSelect(attrs={
+                "class": "form-check-input form-check-inline"
+            }),
             "batch_maternity": forms.RadioSelect(attrs={
                 "class": "form-check-input form-check-inline"
             }),
-            "batch_shapping": forms.RadioSelect(attrs={
-                "class": "form-check-input form-check-inline"
-            }),            
-            "birth_month": forms.RadioSelect(attrs={
-                "class": "form-check-input form-check-inline"
-            }),            
+            "birth_month": forms.CheckboxSelectMultiple(attrs={
+                "class": "checkbox-select-multiple"
+            }),
             "batch_size": forms.NumberInput(attrs={
                 "class": "form-control"
             }),
