@@ -72,7 +72,6 @@ class Batch(models.Model):
     ]
 
     BIRTH_MONTH_CHOICES = [(str(i), str(i)) for i in range(1, 13)]  # Gera valores de 1 a 12
-    BIRTH_MONTH_CHOICES.append(("N/A", "N/A"))  # Adiciona a opção "N/A" ao final
 
     
     farm = models.ForeignKey(Farm, on_delete=models.CASCADE, related_name="batches")
@@ -125,13 +124,28 @@ class Batch(models.Model):
         return 1
     
     def save(self, *args, **kwargs):
+    # Configura o nome do lote, se ainda não estiver definido
         if not self.batch_name:
             next_number = self.next_batch_number()
             self.batch_name = f"Lote {next_number}"
-
+        
+        super().save(*args, **kwargs)
+        
+        selected_birth_months = list(self.birth_month.all().values_list('month', flat=True))
+        
         if self.batch_shapping in ["VS", "NN", "NP"]:
             self.batch_maternity = "N/A"
-            self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating}"
+            self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating} - N/A"
         else:
-            self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating} - {self.batch_maternity}"
+            if selected_birth_months:
+                if len(selected_birth_months) == 1:
+                    self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating} - {self.batch_maternity} - {selected_birth_months[0]}"
+                else:
+                    birth_months_display = "; ".join(selected_birth_months)
+                    self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating} - {self.batch_maternity} - {birth_months_display}"
+            else:
+                self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating} - {self.batch_maternity} - N/A"
+        
+        print(f"Batch acronym after update: {self.batch_acronym}")
+
         super().save(*args, **kwargs)
