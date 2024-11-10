@@ -5,7 +5,7 @@ class Farm(models.Model):
     def __str__(self):
         return self.farm_name
 
-    farm_name = models.CharField(max_length=200)
+    farm_name = models.CharField(max_length=200, unique=True)
     farm_brand = models.ImageField(default="defaultlogo.jpg", upload_to="farm_logos")
     farm_acronym = models.CharField(max_length=4, default="")
     farm_owner = models.CharField(max_length=200)
