@@ -135,7 +135,7 @@ class Batch(models.Model):
         
         if self.batch_shapping in ["VS", "NN", "NP"]:
             self.batch_maternity = "N/A"
-            self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating} - N/A"
+            self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating} - N/A - N/A"
         else:
             if selected_birth_months:
                 if len(selected_birth_months) == 1:

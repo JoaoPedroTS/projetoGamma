@@ -15,10 +15,10 @@ def farm_index(request, season_id=None):
     season = None
 
     if season_id is None:
-        farm_list = Farm.objects.all()
+        farm_list = Farm.objects.all().order_by("farm_name")
     else:
         season = Season.objects.get(id=season_id)
-        farm_list = season.farms.all()
+        farm_list = season.farms.all().order_by("farm_name")
     
     context = {
         "season": season,

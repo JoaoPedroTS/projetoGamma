@@ -30,17 +30,31 @@ def season_detail(request, season_id):
         prior_batch__isnull=True,
     ).aggregate(total=Sum("batch_size"))["total"]
 
+    # Contagem de retornos
+    derivative_batch_size = Batch.objects.filter(
+        season=season).exclude(prior_batch=None).aggregate(total=Sum("batch_size")
+    )["total"]
+
+
     #Contagem de Lotes por tipo na estação
-    batches_types = Batch.objects.filter(season_id=season_id).values('batch_shapping').annotate(total=Count('id'))
+    batches_types = Batch.objects.filter(
+        season_id=season_id).values('batch_shapping').annotate(total=Count('id')
+    )
 
     #contagem de lotes por protocolo na estação
-    protocols = Batch.objects.filter(season_id=season_id).values("protocol__protocol_acronym").annotate(total=Count("id"))
+    protocols = Batch.objects.filter(
+        season_id=season_id).values("protocol__protocol_acronym").annotate(total=Count("id")
+    )
 
     #Contagem de lotes por Responsável técnico
-    vets = Batch.objects.filter(season_id=season_id).values('vet_name__username').annotate(total=Count('id'))
+    vets = Batch.objects.filter(
+        season_id=season_id).values('vet_name__username').annotate(total=Count('id')
+    )
 
     #Contagem de lotes agrupado por `batch_maternity`
-    batches_maternity_count = Batch.objects.filter(season_id=season_id).values("batch_maternity").annotate(total=Count("id"))
+    batches_maternity_count = Batch.objects.filter(
+        season_id=season_id).values("batch_maternity").annotate(total=Count("id")
+    )
 
     season_duration = season.get_duration()
     elapsed_days = timezone.now().date() - season.begin_date
@@ -61,7 +75,8 @@ def season_detail(request, season_id):
         "vets":vets,
         "season_duration": season_duration,
         "remaining_days": remaining_days,
-        "percent_remaining_days": percent_remaining_days
+        "percent_remaining_days": percent_remaining_days,
+        "derivative_batch_size": derivative_batch_size
     }
     
     return render(request, "season/season-detail.html", context)
