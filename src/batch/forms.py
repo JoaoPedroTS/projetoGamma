@@ -126,7 +126,7 @@ class WorkDayForm(forms.ModelForm):
 
         labels = {
             "positive_quant": "Positivas",
-            "negative_quant": "Negatvas",
+            "negative_quant": "Negativas",
             "recurrence_quant": "Retorno",
             "uncertainty_quant": "Duvida",
             "dg_date": "Data do serviço"
