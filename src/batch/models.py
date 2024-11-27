@@ -147,5 +147,3 @@ class Batch(models.Model):
                 self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating} - {self.batch_maternity} - N/A"
         
         print(f"Batch acronym after update: {self.batch_acronym}")
-
-        super().save(*args, **kwargs)

@@ -129,6 +129,8 @@ def add_workday(request, batch_id):
         instance.work_day = work_day
         instance.save()
 
+        form.save_m2m()  # Salva os dados de ManyToMany se necessários
+
         return redirect("batch_index", farm_id=batch.farm.id, season_id=batch.season.id)
 
     context = {
