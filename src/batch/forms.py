@@ -152,6 +152,21 @@ class WorkDayForm(forms.ModelForm):
             }, format='%d-%m-%Y'),
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        positive_quant = cleaned_data.get("positive_quant", 0)
+        negative_quant = cleaned_data.get("negative_quant", 0)
+        recurrence_quant = cleaned_data.get("recurrence_quant", 0)
+        uncertainty_quant = cleaned_data.get("uncertainty_quant", 0)
+
+        total_quant = positive_quant + negative_quant + recurrence_quant + uncertainty_quant
+
+        batch_size = self.instance.batch_size
+        if total_quant != batch_size:
+            raise forms.ValidationError("Quantidade inconsistente") 
+        
+        return cleaned_data
+        
     def save(self, commit=True, work_day=False):
         instance = super().save(commit=False)
         instance.work_day = work_day
