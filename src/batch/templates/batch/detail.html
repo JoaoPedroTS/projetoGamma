@@ -10,6 +10,15 @@
     {% block body %}        
         <h1>{{ batch.batch_name }} -- Fazenda {{ batch.farm.farm_name }} -- {{ batch.season.season_name }}</h1>
         <p>Informações gerais</p>
+        <h2>Lote: {{ batch.batch_name }}</h2>
+        <h3>Lotes Derivados:</h3>
+        <ul>
+            {% for derivative in derivatives %}
+                <li>{{ derivative.batch_name }} ({{ derivative.batch_size }} animais)</li>
+            {% empty %}
+                <li>Nenhum lote derivado encontrado.</li>
+            {% endfor %}
+        </ul>
         <p> Anamais no lote: {{ batch.batch_size }} </p>
         <div class="row">
             <div class="col-lg-6">
@@ -70,6 +79,81 @@
             <button type="button" class="btn btn-danger">
                 <a href="{% url 'delete_batch' batch.id batch.season.id batch.farm.id %}">Apagar</a>
             </button>
+        </div>
+
+
+        <div class="row">
+            <br>
+            <h3>Edição global</h3>
+            <div class="col-lg-6">
+                <form method="POST">
+                    {% csrf_token %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col"> </th>
+                                <th scope="col">Atual</th>
+                                <th scope="col">Retirar</th>
+                                <th scope="col">Adicionar</th>
+                                <th scope="col">Projeção</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Prenha</td>
+                                <td>{{ batch.positive_quant }}</td>
+                                <td>
+                                    <input type="number" class="form-control" placeholder="0">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" placeholder="0">
+                                </td>
+                                <td> =Atual + Adicionar - retinar</td>
+                            </tr>
+                            <tr>
+                                <td>Vazia</td>
+                                <td>{{ batch.negative_quant }}</td>
+                                <td>
+                                    <input type="number" class="form-control" placeholder="0">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" placeholder="0">
+                                </td>
+                                <td> =Atual + Adicionar - retinar</td>
+                            </tr>
+                            <tr>
+                                <td>Retorno</td>
+                                <td>{{ batch.recurrence_quant }}</td>
+                                <td>
+                                    <input type="number" class="form-control" placeholder="0">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" placeholder="0">
+                                </td>
+                                <td> =Atual + Adicionar - retinar</td>
+                            </tr>
+                            <tr>
+                                <td>Suspeita</td>
+                                <td>{{ batch.uncertainty_quant }}</td>
+                                <td>
+                                    <input type="number" class="form-control" placeholder="0">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" placeholder="0">
+                                </td>
+                                <td> =Atual + Adicionar - retinar</td>
+                            </tr>
+                            <tr>
+                                <td>Total</td>
+                                <td>{{ batch.batch_size }}</td>
+                                <td>5</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </form>
+            </div>
         </div>
     {% endblock %}
 </body>

@@ -11,6 +11,12 @@
         {% if season %}
             <h1>Lista de fazendas da {{ season.season_name }}</h1>
 
+            <div class="col-lg-3">
+                <button class="btn btn-success">
+                    <a href="{% url 'season_detail' season.id %}">Voltar para dashboard</a>
+                </button>
+            </div>
+
             {% if farm_list %}
                 {% for farm in farm_list %}
                     <div>

@@ -19,6 +19,12 @@
                 <button class="btn btn-success">
                     <a href="{% url 'batch_index' farm.id season.id %}">Lotes desta fazenda</a>
                 </button>
+
+                <div class="col-lg-3">
+                    <button class="btn btn-success">
+                        <a href="{% url 'farm_index' season.id %}">Voltar para lista de fazendas</a>
+                    </button>
+                </div>
                 
                 <p>Total de lotes: {{ batches_count }}</p>
                 <p>Total de animais: {{ animals_count }}</p>
