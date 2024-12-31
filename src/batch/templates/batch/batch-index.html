@@ -59,7 +59,9 @@
                             </a>
                         {% endif %}
                     </li>
+
                     <li class="page-item"><a class="page-link" href="#">pagina {{ batch_list.number }} de {{ batch_list.paginator.num_pages }}</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ batch_list.paginator.num_pages }}">Ultima pagina</a></li>
                     <li class="page-item">
                         {% if batch_list.has_next %}
                             <a class="page-link" href="?page={{ batch_list.next_page_number }}" aria-label="Next">

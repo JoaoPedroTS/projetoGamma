@@ -51,7 +51,6 @@ def add_batch(request, season_id, farm_id):
             batch = form.save(commit=False)
             batch.farm = farm
             batch.season = season
-            batch.vet_name = request.user
             batch.save()
 
             form.save_m2m()
