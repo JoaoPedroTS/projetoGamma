@@ -50,10 +50,9 @@ class BatchForm(forms.ModelForm):
                 "class": "form-control"
             }),
             "d0_date": forms.DateInput(attrs={
-                "class": "form-control",
-                "placeholder": "dd-mm-yyyy"
-            }, format='%d-%m-%Y'),
-
+                "class": "form-control datepicker",
+                "placeholder": "dd/mm/yyyy"
+            }, format='%d/%m/%Y'),
             "rating": forms.RadioSelect(attrs={
                 "class": "form-check-input form-check-inline"
             })
