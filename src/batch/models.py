@@ -114,13 +114,17 @@ class Batch(models.Model):
     batch_acronym = models.CharField(max_length=50, default="", blank=True)
 
     def next_batch_number(self, *args, **kwargs):
+        all_batches = Batch.objects.filter(farm=self.farm, season=self.season).order_by("-id")
+        print(all_batches)
         latest_batch = Batch.objects.filter(farm=self.farm, season=self.season).order_by("-id").first()
         if latest_batch and latest_batch.batch_name:
+            print(f"latest_batch {latest_batch}")
             try:
                 latest_batch = int(latest_batch.batch_name.split()[-1])
+                print(f"latest_batch {latest_batch}")
             except ValueError:
                 latest_batch = 0
-            return latest_batch +1 
+            return latest_batch +1
         return 1
     
     def save(self, *args, **kwargs):
@@ -135,15 +139,15 @@ class Batch(models.Model):
         
         if self.batch_shapping in ["VS", "NN", "NP"]:
             self.batch_maternity = "N/A"
-            self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating} - N/A - N/A"
+            self.batch_acronym = f"{self.farm.farm_acronym} - {self.d0_date.strftime('%d/%m')} - {self.batch_name} - {self.batch_shapping} - {self.rating} - N/A - N/A"
         else:
             if selected_birth_months:
                 if len(selected_birth_months) == 1:
-                    self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating} - {self.batch_maternity} - {selected_birth_months[0]}"
+                    self.batch_acronym = f"{self.farm.farm_acronym} - {self.d0_date.strftime('%d/%m')} - {self.batch_name} - {self.batch_shapping} - {self.rating} - {self.batch_maternity} - {selected_birth_months[0]}"
                 else:
                     birth_months_display = "; ".join(selected_birth_months)
-                    self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating} - {self.batch_maternity} - {birth_months_display}"
+                    self.batch_acronym = f"{self.farm.farm_acronym} - {self.d0_date.strftime('%d/%m')} - {self.batch_name} - {self.batch_shapping} - {self.rating} - {self.batch_maternity} - {birth_months_display}"
             else:
-                self.batch_acronym = f"{self.batch_name} - {self.batch_shapping} - {self.rating} - {self.batch_maternity} - N/A"
+                self.batch_acronym = f"{self.farm.farm_acronym} - {self.d0_date.strftime('%d/%m')} - {self.batch_name} - {self.batch_shapping} - {self.rating} - {self.batch_maternity} - N/A"
         
         print(f"Batch acronym after update: {self.batch_acronym}")
