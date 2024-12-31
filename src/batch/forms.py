@@ -22,6 +22,7 @@ class BatchForm(forms.ModelForm):
             "order",
             "rating",
             "d0_date",
+            "vet_name"
         ]
         
         labels = {
@@ -33,6 +34,7 @@ class BatchForm(forms.ModelForm):
             "order": "Ordem de parição",
             "rating": "Escore",
             "d0_date": "Data D-0",
+            "vet_name": "Veterinário responsável"
         }
 
         widgets = {
@@ -61,6 +63,10 @@ class BatchForm(forms.ModelForm):
                 "class": "form-control datepicker",
                 "placeholder": "dd/mm/yyyy"
             }, format='%d/%m/%Y'),
+            "vet_name": forms.Select(attrs={
+                'class': 'form-select'
+            }),
+
         }
     
     def __init__(self, *args, **kwargs):
