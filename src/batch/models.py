@@ -71,6 +71,14 @@ class Batch(models.Model):
         for i in range(8, 21)  # gera valores de 1.0 até 5.0 com passo 0.25
     ]
 
+    class OrderChoices(models.TextChoices):
+        N = "N" ,"Nulípara"
+        P = "P" ,"Primípara" 
+        S = "S" ,"Secundípara" 
+        M = "M" ,"Multípara"
+        H = "H" ,"heterogêneo" 
+
+
     BIRTH_MONTH_CHOICES = [(str(i), str(i)) for i in range(1, 13)]  # Gera valores de 1 a 12
 
     
@@ -97,6 +105,12 @@ class Batch(models.Model):
     batch_size = models.IntegerField()
     d0_date = models.DateField(blank=True, null=True, default=None)
     dg_date = models.DateField(blank=True, null=True, default=None)
+    order = models.CharField(
+        max_length=1,
+        choices= OrderChoices.choices,
+        null=True,
+        blank=True
+    )
     rating = models.DecimalField(
         max_digits=3,
         decimal_places=2,

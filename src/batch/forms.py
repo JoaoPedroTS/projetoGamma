@@ -19,8 +19,9 @@ class BatchForm(forms.ModelForm):
             "batch_maternity",
             "birth_month",
             "batch_size",
+            "order",
+            "rating",
             "d0_date",
-            "rating"
         ]
         
         labels = {
@@ -29,8 +30,9 @@ class BatchForm(forms.ModelForm):
             "batch_maternity": "Sexo",
             "birth_month": "Mês de parição",
             "batch_size": "Tamanho do lote",
+            "order": "Ordem de parição",
+            "rating": "Escore",
             "d0_date": "Data D-0",
-            "rating": "Escore"
         }
 
         widgets = {
@@ -49,23 +51,28 @@ class BatchForm(forms.ModelForm):
             "batch_size": forms.NumberInput(attrs={
                 "class": "form-control"
             }),
+            "order": forms.RadioSelect(attrs={
+                "class": "form-check-input form-check-inline"
+            }),
+            "rating": forms.RadioSelect(attrs={
+                "class": "form-check-input form-check-inline"
+            }),
             "d0_date": forms.DateInput(attrs={
                 "class": "form-control datepicker",
                 "placeholder": "dd/mm/yyyy"
             }, format='%d/%m/%Y'),
-            "rating": forms.RadioSelect(attrs={
-                "class": "form-check-input form-check-inline"
-            })
         }
     
     def __init__(self, *args, **kwargs):
         super(BatchForm, self).__init__(*args, **kwargs)
         self.fields['rating'].choices = Batch.RATING_CHOICES
+        self.fields['order'].choices = Batch.OrderChoices.choices
         self.fields['batch_maternity'].choices = Batch.Choices.choices
         self.fields['batch_shapping'].choices = Batch.ShappingChoices.choices
         self.fields['birth_month'].choices = Batch.BIRTH_MONTH_CHOICES
         # Remover o espaço reservado
         self.fields['rating'].empty_label = None
+        self.fields['order'].empty_label = None
         self.fields['batch_maternity'].empty_label = None
         self.fields['batch_shapping'].empty_label = None
         self.fields['birth_month'].empty_label = None

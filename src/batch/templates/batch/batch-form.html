@@ -65,6 +65,17 @@
                                                     </div>
                                                 {% endfor %}
                                             </div>
+                                        {% elif field.name == 'order' %}
+                                            <div class="d-flex flex-wrap">
+                                                {% for choice in field %}
+                                                    <div class="form-check form-check-inline">
+                                                        {{ choice.tag }}  <!-- Renderiza o input do checkbox -->
+                                                        <label class="form-check-label">
+                                                            {{ choice.choice_label }}  <!-- Aqui renderiza o rótulo do Radio -->
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
                                         {% else %}
                                             {{ field }}
                                         {% endif %}
