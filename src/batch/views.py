@@ -56,7 +56,8 @@ def add_batch(request, season_id, farm_id):
             batch.season = season
             batch.save()
             form.save_m2m()
-            batch.save(update_fields=["batch_acronym"])
+
+            batch.update_acronym()
             
             return redirect("batch_index", farm_id=farm_id , season_id=season_id)        
     else: 

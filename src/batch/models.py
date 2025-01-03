@@ -128,7 +128,6 @@ class Batch(models.Model):
     batch_acronym = models.CharField(max_length=50, default="", blank=True)
 
     def next_batch_number(self, *args, **kwargs):
-        all_batches = Batch.objects.filter(farm=self.farm, season=self.season).order_by("-id")
         latest_batch = Batch.objects.filter(farm=self.farm, season=self.season).order_by("-id").first()
         if latest_batch and latest_batch.batch_name:
             print(f"latest_batch {latest_batch}")
@@ -139,19 +138,11 @@ class Batch(models.Model):
                 latest_batch = 0
             return latest_batch +1
         return 1
-    
-    def save(self, *args, **kwargs):
-    # Configura o nome do lote, se ainda não estiver definido
-        if not self.pk:
-            if not self.batch_name:
-                next_number = self.next_batch_number()
-                self.batch_name = f"Lote {next_number}"
-        
-        super().save(*args, **kwargs)
-        
-        selected_birth_months = list(self.birth_month.all().values_list('month', flat=True))
-        print(len(selected_birth_months))
-        
+
+    def update_acronym(self):
+        """Atualiza batch_acronym com base nos valores atuais"""
+        selected_birth_months = list(self.birth_month.all().values_list("month", flat=True))
+
         if self.batch_shapping in ["VS", "NN", "NP"]:
             self.batch_maternity = "N/A"
             self.batch_acronym = f"{self.farm.farm_acronym} - {self.d0_date.strftime('%d/%m')} - {self.batch_name} - {self.batch_shapping} - N/A - N/A - N/A - {self.rating}"
@@ -165,4 +156,15 @@ class Batch(models.Model):
             else:
                 self.batch_acronym = f"{self.farm.farm_acronym} - {self.d0_date.strftime('%d/%m')} - {self.batch_name} - {self.batch_shapping} - {self.order} - N/A - {self.batch_maternity} - {self.rating}"
         
-        print(f"Batch acronym after update: {self.batch_acronym}")
+        # Salva apenas o campo batch_acronym para evitar loops recursivos
+        self.save(update_fields=["batch_acronym"])
+
+
+    def save(self, *args, **kwargs):
+        # Configura o nome do lote, se ainda não estiver definido
+        if not self.pk:
+            if not self.batch_name:
+                next_number = self.next_batch_number()
+                self.batch_name = f"Lote {next_number}"
+
+        super().save(*args, **kwargs)  # Salva a instância primeiro para obter um ID válido
