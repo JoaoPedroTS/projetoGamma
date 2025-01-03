@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db import IntegrityError
+from django.db.models import Sum
 from .models import Batch, Supplier, Protocol
 from farm.models import Farm
 from season.models import Season
@@ -15,6 +17,7 @@ def batch_index(request, farm_id, season_id):
     season = Season.objects.get(id=season_id)
     farm = Farm.objects.get(id=farm_id)
     batch_list = Batch.objects.filter(farm=farm, season=season).order_by('id')
+    total_animals = Batch.objects.filter(farm=farm, season=season, prior_batch__isnull=True).aggregate(Sum('batch_size'))['batch_size__sum'] or 0
 
     #Search
     batch_name = request.GET.get("batch_name")
@@ -30,6 +33,7 @@ def batch_index(request, farm_id, season_id):
         "season": season,
         "farm": farm,
         "batch_list": batch_list,
+        "total_animals": total_animals
     }
 
     return render(request, "batch/batch-index.html", context)
@@ -47,21 +51,17 @@ def add_batch(request, season_id, farm_id):
     if request.method == "POST":
         print(request.POST)
         if form.is_valid():
-            print("Dados limpos para farms:", form.cleaned_data.get("birth_month"))
             batch = form.save(commit=False)
             batch.farm = farm
             batch.season = season
             batch.save()
-
             form.save_m2m()
-
             batch.save(update_fields=["batch_acronym"])
             
-            return redirect("batch_index", farm_id=farm_id , season_id=season_id)
-        
-        else: 
-            print(form.errors)
-        
+            return redirect("batch_index", farm_id=farm_id , season_id=season_id)        
+    else: 
+        print(form.errors)
+            
     context = {
         "form": form
     }
@@ -74,8 +74,12 @@ def edit_batch(request, id):
     form = EditBatchForm(request.POST or None, instance=batch)
 
     if form.is_valid():
-        form.save()
+        batch = form.save(commit=False)
+        batch.save()
+        batch.save(update_fields=["batch_acronym"])
         return redirect("batch_detail", batch_id=id)
+    else:
+        print("Erros no formulário:", form.errors)
     
     context = {
         "form": form,

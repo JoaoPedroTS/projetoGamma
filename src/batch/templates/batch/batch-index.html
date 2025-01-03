@@ -9,7 +9,7 @@
 <body>    
     {% block body %}
         <h3> Fazenda: {{ farm.farm_name }}  {{ farm.farm_acronym }} -- Estação: {{ season.season_name }} </h3>
-        <h4> Total de animais na estação: (Soma de todos os lotes cabeceira) -- Total de prenhas na estação: X (A%)</h4>
+        <h4> Total de animais na estação: {{total_animals}} -- Total de prenhas na estação: X (A%)</h4>
 
         <div class="col-lg-3">
             <button class="btn btn-success">

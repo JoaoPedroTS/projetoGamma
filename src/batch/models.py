@@ -142,9 +142,10 @@ class Batch(models.Model):
     
     def save(self, *args, **kwargs):
     # Configura o nome do lote, se ainda não estiver definido
-        if not self.batch_name:
-            next_number = self.next_batch_number()
-            self.batch_name = f"Lote {next_number}"
+        if not self.pk:
+            if not self.batch_name:
+                next_number = self.next_batch_number()
+                self.batch_name = f"Lote {next_number}"
         
         super().save(*args, **kwargs)
         
@@ -165,5 +166,3 @@ class Batch(models.Model):
                 self.batch_acronym = f"{self.farm.farm_acronym} - {self.d0_date.strftime('%d/%m')} - {self.batch_name} - {self.batch_shapping} - {self.order} - N/A - {self.batch_maternity} - {self.rating}"
         
         print(f"Batch acronym after update: {self.batch_acronym}")
-
-        super().save(*args, **kwargs)
