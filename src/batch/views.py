@@ -18,6 +18,9 @@ def batch_index(request, farm_id, season_id):
     farm = Farm.objects.get(id=farm_id)
     batch_list = Batch.objects.filter(farm=farm, season=season).order_by('id')
     total_animals = Batch.objects.filter(farm=farm, season=season, prior_batch__isnull=True).aggregate(Sum('batch_size'))['batch_size__sum'] or 0
+    positive_quant_sum = Batch.objects.filter(farm=farm, season=season).aggregate(Sum('positive_quant'))['positive_quant__sum'] or 0
+    positive_percent = (positive_quant_sum / total_animals) * 100
+
 
     #Search
     batch_name = request.GET.get("batch_name")
@@ -33,7 +36,9 @@ def batch_index(request, farm_id, season_id):
         "season": season,
         "farm": farm,
         "batch_list": batch_list,
-        "total_animals": total_animals
+        "total_animals": total_animals,
+        "positive_quant_sum": positive_quant_sum,
+        "positive_percent": positive_percent
     }
 
     return render(request, "batch/batch-index.html", context)
