@@ -20,8 +20,75 @@
                                 {% csrf_token %}
                                 {% for field in form %}
                                     <div class="form-group">
-                                        {{ field.label }}
-                                        {{ field }}
+                                        {% if field.name == 'batch_shapping' %}
+                                            <label class="form-label">{{ field.label }}</label> <!-- Adiciona o título do campo -->
+                                            <div class="d-flex flex-wrap">
+                                                {% for choice in field %}
+                                                    <div class="form-check me-3 mb-3">
+                                                        {{ choice.tag }} <!-- Aqui renderiza o input do Radio -->
+                                                        <label class="form-check-label">
+                                                            {{ choice.choice_label }} <!-- Aqui renderiza o rótulo do Radio -->
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% elif field.name == 'batch_maternity' %}
+                                            <label class="form-label">{{ field.label }}</label> <!-- Adiciona o título do campo -->
+                                            <div class="d-flex flex-wrap">
+                                                {% for choice in field %}
+                                                    <div class="form-check me-3 mb-3">
+                                                        {{ choice.tag }}  <!-- Aqui renderiza o input do Radio -->
+                                                        <label class="form-check-label">
+                                                            {{ choice.choice_label }}  <!-- Aqui renderiza o rótulo do Radio -->
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% elif field.name == 'birth_month' %}
+                                            <label class="form-label">{{ field.label }}</label> <!-- Adiciona o título do campo -->
+                                            <div class="d-flex flex-wrap">
+                                                {% for choice in form.birth_month %}
+                                                    <div class="form-check form-check-inline">
+                                                        {{ choice.tag }}  <!-- Renderiza o input do checkbox -->
+                                                        <label class="form-check-label" for="{{ choice.id_for_label }}">
+                                                            {{ choice.choice_label }}  <!-- Renderiza o rótulo do checkbox -->
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% elif field.name == 'order' %}
+                                            <label class="form-label">{{ field.label }}</label> <!-- Adiciona o título do campo -->
+                                            <div class="d-flex flex-wrap">
+                                                {% for choice in field %}
+                                                    <div class="form-check form-check-inline">
+                                                        {{ choice.tag }}  <!-- Renderiza o input do checkbox -->
+                                                        <label class="form-check-label">
+                                                            {{ choice.choice_label }}  <!-- Aqui renderiza o rótulo do Radio -->
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% elif field.name == 'rating' %}
+                                            <label class="form-label">{{ field.label }}</label> <!-- Adiciona o título do campo -->    
+                                            <div class="d-flex flex-wrap">
+                                                {% for choice in field %}
+                                                    <div class="form-check me-3 mb-3">
+                                                        {{ choice.tag }}
+                                                        <label class="form-check-label">
+                                                            {{ choice.choice_label }}
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}                                            
+                                            {{ field.label }}
+                                            {{ field }}
+                                        {% endif %}
+                                        {% if field.errors %}
+                                            <div class="text-danger">
+                                                {{ field.errors }}
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 {% endfor %}
                                 <br>

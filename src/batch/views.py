@@ -19,7 +19,11 @@ def batch_index(request, farm_id, season_id):
     batch_list = Batch.objects.filter(farm=farm, season=season).order_by('id')
     total_animals = Batch.objects.filter(farm=farm, season=season, prior_batch__isnull=True).aggregate(Sum('batch_size'))['batch_size__sum'] or 0
     positive_quant_sum = Batch.objects.filter(farm=farm, season=season).aggregate(Sum('positive_quant'))['positive_quant__sum'] or 0
-    positive_percent = (positive_quant_sum / total_animals) * 100
+    
+    if total_animals > 0:
+        positive_percent = round(((positive_quant_sum / total_animals) * 100), 2)
+    else:
+        positive_percent = 0
 
 
     #Search

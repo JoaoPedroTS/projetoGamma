@@ -87,27 +87,61 @@ class EditBatchForm(forms.ModelForm):
     class Meta:
         model = Batch
         fields = [
+            "protocol",
+            "batch_shapping",
+            "batch_maternity",
+            "birth_month",
             "batch_name",
+            "order",
+            "rating",
             "batch_size",
             "positive_quant",
             "negative_quant",
             "recurrence_quant",
-            "uncertainty_quant"
+            "uncertainty_quant",
+            "d0_date",
+            "vet_name"
         ]
 
         labels = {
+            "protocol": "Protocolo",
+            "batch_shapping": "Formação do lote",
+            "batch_maternity": "Sexo",
+            "birth_month": "Mês de parição",
+            "order": "Ordem de parição",
+            "rating": "Escore",
             "batch_name": "Nome do lote",
             "batch_size": "Tamanho do lote",
             "positive_quant": "Positivas",
             "negative_quant": "Negativas",
             "recurrence_quant": "Retorno",
-            "uncertainty_quant": "Dúvida"
+            "uncertainty_quant": "Dúvida",
+            "d0_date": "Data D-0",
+            "vet_name": "Veterinário responsável"
         }
 
         widgets = {
+            "protocol": forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            "batch_shapping": forms.RadioSelect(attrs={
+                "class": "form-check-input form-check-inline"
+            }),
+            "batch_maternity": forms.RadioSelect(attrs={
+                "class": "form-check-input form-check-inline"
+            }),
             "batch_name": forms.TextInput(attrs={
                 "class": "form-control"
-            }),            
+            }),  
+            "birth_month": forms.CheckboxSelectMultiple(attrs={
+                "class": "checkbox-select-multiple"
+            }),
+            "order": forms.RadioSelect(attrs={
+                "class": "form-check-input form-check-inline"
+            }),   
+            "rating": forms.RadioSelect(attrs={
+                "class": "form-check-input form-check-inline"
+            }),     
             "batch_size": forms.NumberInput(attrs={
                 "class": "form-control"
             }),            
@@ -123,7 +157,29 @@ class EditBatchForm(forms.ModelForm):
             "uncertainty_quant": forms.NumberInput(attrs={
                 "class": "form-control"
             }),
+            "d0_date": forms.DateInput(attrs={
+                "class": "form-control datepicker",
+                "placeholder": "dd/mm/yyyy"
+            }, format='%d/%m/%Y'),
+            "vet_name": forms.Select(attrs={
+                'class': 'form-select'
+            }),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(EditBatchForm, self).__init__(*args, **kwargs)
+        self.fields['batch_shapping'].choices = Batch.ShappingChoices.choices
+        self.fields['batch_maternity'].choices = Batch.Choices.choices
+        self.fields['birth_month'].choices = Batch.BIRTH_MONTH_CHOICES
+        self.fields['order'].choices = Batch.OrderChoices.choices
+        self.fields['rating'].choices = Batch.RATING_CHOICES
+        
+        # Remover o espaço reservado
+        self.fields['batch_shapping'].empty_label = None
+        self.fields['batch_maternity'].empty_label = None
+        self.fields['birth_month'].empty_label = None
+        self.fields['order'].empty_label = None
+        self.fields['rating'].empty_label = None
 
 class WorkDayForm(forms.ModelForm):
     class Meta:
