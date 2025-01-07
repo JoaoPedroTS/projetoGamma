@@ -18,10 +18,16 @@ def batch_index(request, farm_id, season_id):
     farm = Farm.objects.get(id=farm_id)
     batch_list = Batch.objects.filter(farm=farm, season=season).order_by('id')
     total_animals = Batch.objects.filter(farm=farm, season=season, prior_batch__isnull=True).aggregate(Sum('batch_size'))['batch_size__sum'] or 0
+    total_animals_dg = Batch.objects.filter(
+                            farm=farm,
+                            season=season,
+                            prior_batch__isnull=True,
+                            positive_quant__gt=0  # Filtra apenas lotes com positive_quant maior que 0
+                        ).aggregate(Sum('batch_size'))['batch_size__sum'] or 0
     positive_quant_sum = Batch.objects.filter(farm=farm, season=season).aggregate(Sum('positive_quant'))['positive_quant__sum'] or 0
     
     if total_animals > 0:
-        positive_percent = round(((positive_quant_sum / total_animals) * 100), 2)
+        positive_percent = round(((positive_quant_sum / total_animals_dg) * 100), 2)
     else:
         positive_percent = 0
 
