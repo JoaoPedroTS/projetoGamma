@@ -140,6 +140,9 @@ class Batch(models.Model):
             return latest_batch +1
         return 1
 
+    def birth_month_display(self):
+        return "; ".join(str(month) for month in self.birth_month.all())
+    
     def update_acronym(self):
         """Atualiza batch_acronym com base nos valores atuais"""
         selected_birth_months = list(self.birth_month.all().values_list("month", flat=True))
