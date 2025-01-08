@@ -5,6 +5,9 @@ from .models import Farm
 from batch.models import Batch
 from .forms import FarmForm
 from season.models import Season
+import locale
+
+locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
 # Create your views here.
 
@@ -15,10 +18,10 @@ def farm_index(request, season_id=None):
     season = None
 
     if season_id is None:
-        farm_list = Farm.objects.all().order_by("farm_name")
+        farm_list = sorted(Farm.objects.all(), key=lambda f: locale.strxfrm(f.farm_name))
     else:
         season = Season.objects.get(id=season_id)
-        farm_list = season.farms.all().order_by("farm_name")
+        farm_list = sorted(season.farms.all(), key=lambda f: locale.strxfrm(f.farm_name))
     
     context = {
         "season": season,
