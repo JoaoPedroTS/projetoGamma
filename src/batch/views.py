@@ -47,6 +47,7 @@ def batch_index(request, farm_id, season_id):
         "farm": farm,
         "batch_list": batch_list,
         "total_animals": total_animals,
+        "total_animals_dg": total_animals_dg,
         "positive_quant_sum": positive_quant_sum,
         "positive_percent": positive_percent
     }
