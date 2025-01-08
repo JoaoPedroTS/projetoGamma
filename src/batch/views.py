@@ -16,7 +16,7 @@ from .tables import BatchTable
 def batch_index(request, farm_id, season_id):
     season = Season.objects.get(id=season_id)
     farm = Farm.objects.get(id=farm_id)
-    batch_list = Batch.objects.filter(farm=farm, season=season).order_by('id')
+    batch_list = Batch.objects.filter(farm=farm, season=season).order_by('d0_date')
     total_animals = Batch.objects.filter(farm=farm, season=season, prior_batch__isnull=True).aggregate(Sum('batch_size'))['batch_size__sum'] or 0
     total_animals_dg = Batch.objects.filter(
                             farm=farm,
