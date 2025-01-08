@@ -65,6 +65,7 @@ class Batch(models.Model):
         VP = "VP", "Vaca Parida"
         NN = "NN", "Novilha Normal"
         NP = "NP", "Novilha Precoce"
+        RE = "RE", "Receptora"
 
     RATING_CHOICES = [
         (round(i * 0.25, 2), str(round(i * 0.25, 2)))
@@ -125,7 +126,7 @@ class Batch(models.Model):
     recurrence_positive_quant = models.IntegerField(default=0)
     recurrence_quant = models.IntegerField(default=0)
     uncertainty_quant = models.IntegerField(default=0)
-    batch_acronym = models.CharField(max_length=50, default="", blank=True)
+    batch_acronym = models.CharField(max_length=500, default="", blank=True)
 
     def next_batch_number(self, *args, **kwargs):
         latest_batch = Batch.objects.filter(farm=self.farm, season=self.season).order_by("-id").first()
