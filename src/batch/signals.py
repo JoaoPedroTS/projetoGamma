@@ -13,7 +13,7 @@ def create_negative_derived_batch(sender, instance, created, **kwargs):
         else:
             child_name = f"{name_parts[0]}/1"
         
-        Batch.objects.create(
+        new_batch = Batch.objects.create(
             season = instance.season,
             farm = instance.farm,
             batch_name = child_name,
@@ -22,5 +22,10 @@ def create_negative_derived_batch(sender, instance, created, **kwargs):
             protocol = instance.protocol, ##Revisar
             d0_date = instance.dg_date,
             batch_size = instance.negative_quant,
-            batch_acronym = instance.batch_acronym
+            batch_acronym = instance.batch_acronym,
+            batch_shapping = instance.batch_shapping,
+            order = instance.order,
+            rating = instance.rating
         )
+        
+        new_batch.birth_month.set(instance.birth_month.all())
