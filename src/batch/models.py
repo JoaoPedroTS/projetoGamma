@@ -51,7 +51,7 @@ class BirthMonth(models.Model):
 
 class Batch(models.Model):
     def __str__(self):
-        return self.batch_name
+        return f"{self.farm.farm_acronym} - {self.batch_name}"
     
     class Choices(models.TextChoices):
         SIM = "M", "Macho"
