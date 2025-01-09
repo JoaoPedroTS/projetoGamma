@@ -83,6 +83,23 @@ class BatchForm(forms.ModelForm):
         self.fields['batch_shapping'].empty_label = None
         self.fields['birth_month'].empty_label = None
 
+    # def save(self, commit = True):
+    #     instance = super().save(commit=False)
+
+    #     if not instance.farm_id:
+    #         instance.farm = self.cleaned_data.get("farm")
+
+    #     if commit:
+    #         instance.save()
+    #         self.save_m2m()
+
+    #     if not self.cleaned_data["birth_month"]:
+    #         na_month, _ = BirthMonth.objects.get_or_create(month="N/A")
+    #         instance.save()
+    #         instance.birth_month.set([na_month])
+
+    #     return instance
+
 class EditBatchForm(forms.ModelForm):
     class Meta:
         model = Batch

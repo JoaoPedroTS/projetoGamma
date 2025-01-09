@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db import IntegrityError
 from django.db.models import Sum
-from .models import Batch, Supplier, Protocol
+from .models import Batch, Supplier, Protocol, BirthMonth
 from farm.models import Farm
 from season.models import Season
 from .forms import BatchForm, EditBatchForm, WorkDayForm, SupplierForm, ProtocolForm, UncertaintyForm, RecurrenceForm
@@ -61,18 +60,22 @@ def add_batch(request, season_id, farm_id):
     
     form = BatchForm(request.POST or None)
 
-    print("Dados do POST:", request.POST)
+    print("Dados do POST:", request.POST.get("birth_month"))
 
     if request.method == "POST":
-        print(request.POST)
         if form.is_valid():
             batch = form.save(commit=False)
             batch.farm = farm
             batch.season = season
             batch.save()
-            form.save_m2m()
-
-            batch.update_acronym()
+            
+            birth_month_value = request.POST.get("birth_month")
+            if not birth_month_value:
+                na_month, created = BirthMonth.objects.get_or_create(month="N/A")
+                batch.birth_month.add(na_month)
+            else:
+                batch.birth_month.set(BirthMonth.objects.filter(id__in=birth_month_value))
+            # form.save_m2m()
             
             return redirect("batch_index", farm_id=farm_id , season_id=season_id)        
     else: 

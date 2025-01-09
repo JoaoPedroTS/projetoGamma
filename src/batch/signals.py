@@ -1,5 +1,5 @@
 from django.db.models.signals import post_save
-from .models import Batch
+from .models import Batch, BirthMonth
 from django.dispatch import receiver
 
 @receiver(post_save, sender=Batch)
@@ -28,4 +28,11 @@ def create_negative_derived_batch(sender, instance, created, **kwargs):
             rating = instance.rating
         )
         
-        new_batch.birth_month.set(instance.birth_month.all())
+        birth_months = instance.birth_month.all()
+
+        if birth_months.exists():
+            new_batch.birth_month.set(birth_months)
+        else:
+            # Procura ou cria o objeto "N/A" no modelo BirthMonth
+            na_month, created = BirthMonth.objects.get_or_create(month="N/A")
+            new_batch.birth_month.set([na_month])
