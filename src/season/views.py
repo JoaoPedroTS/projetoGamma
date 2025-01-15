@@ -6,6 +6,11 @@ from.models import Season
 from .forms import SeasonForm, AppendFarmForm
 from batch.models import Batch
 from farm.models import Farm
+from collections import OrderedDict
+import locale
+
+# Configura o locale para o idioma português
+locale.setlocale(locale.LC_COLLATE, 'pt_BR.UTF-8')
 
 # Create your views here.
 
@@ -66,6 +71,23 @@ def season_detail(request, season_id):
         percent_remaining_days = round(((elapsed_days.days/season_duration)*100), 2)
         remaining_days = season.get_remaining_days()
 
+    # Cria um dicionário associando as fazendas ao total de animais e à porcentagem
+    farm_animals_data = {}
+    for farm in season.farms.all():
+        farm_total = Batch.objects.filter(
+            farm=farm, season=season, prior_batch__isnull=True
+        ).aggregate(total=Sum("batch_size"))["total"] or 0
+        
+        farm_animals_data[farm] = {
+            "total": farm_total,
+            "percentage": round((farm_total / total_batch_size) * 100, 2) if total_batch_size > 0 else 0,
+        }
+
+    # Ordena o dicionário pelo total de animais (ordem crescente)
+    farm_animals_data = OrderedDict(
+        sorted(farm_animals_data.items(), key=lambda item: locale.strxfrm(item[0].farm_name))
+    )
+
     context = {
         "season": season,
         "total_batch_size": total_batch_size,
@@ -76,7 +98,8 @@ def season_detail(request, season_id):
         "season_duration": season_duration,
         "remaining_days": remaining_days,
         "percent_remaining_days": percent_remaining_days,
-        "derivative_batch_size": derivative_batch_size
+        "derivative_batch_size": derivative_batch_size,
+        "farm_animals_data": farm_animals_data,
     }
     
     return render(request, "season/season-detail.html", context)

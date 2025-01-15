@@ -212,6 +212,35 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    Fazendas na Estação
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"> Fazenda </th>
+                            <th scope="col"> Total de animais </th>
+                            <th scope="col"> % </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for farm, data in farm_animals_data.items %}
+                            <tr>
+                                <td>{{ farm.farm_name }}</td>
+                                <td>{{ data.total }}</td>
+                                <td>{{ data.percentage }}%</td>
+                        {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-center">Nenhum dado disponível</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>                
+            </div>
+        </div>
+
         <script>
             var percent_remaining_days = document.getElementById("percent_remaining_days").innerHTML;
             // Extrair apenas o número da string
